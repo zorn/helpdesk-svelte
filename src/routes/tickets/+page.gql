@@ -1,0 +1,8 @@
+query Tickets {
+  listTickets {
+    id
+    subject
+    status
+    representativeId
+  }
+}

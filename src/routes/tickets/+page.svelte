@@ -1,23 +1,25 @@
 <script>
 	import { Table, tableMapperValues } from '@skeletonlabs/skeleton';
 
-	const sourceData = [
-		{ position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-		{ position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-		{ position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-		{ position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-		{ position: 5, name: 'Boron', weight: 10.811, symbol: 'B' }
-	];
+	/* @type { import('./$houdini').PageData } */
+	export let data;
 
-	const tableSimple = {
+	$: ({ Tickets } = data);
+	$: console.log($Tickets);
+
+	$: sourceData = $Tickets.fetching ? [] : $Tickets.data.listTickets;
+
+	// $: sourceData = [
+	// 	{ id: 1, status: 'Open', subject: 'Test 1' },
+	// 	{ id: 2, status: 'Open', subject: 'Test 2' },
+	// 	{ id: 3, status: 'Open', subject: 'Test 3' }
+	// ];
+
+	$: tableSimple = {
 		// A list of heading labels.
-		head: ['Name', 'Symbol', 'Weight'],
+		head: ['ID', 'Status', 'Subject'],
 		// The data visibly shown in your table body UI.
-		body: tableMapperValues(sourceData, ['name', 'symbol', 'weight']),
-		// Optional: The data returned when interactive is enabled and a row is clicked.
-		meta: tableMapperValues(sourceData, ['position', 'name', 'symbol', 'weight']),
-		// Optional: A list of footer labels.
-		foot: ['Total', '', '<code class="code">5</code>']
+		body: tableMapperValues(sourceData, ['id', 'status', 'subject'])
 	};
 
 	function mySelectionHandler(event) {
@@ -26,5 +28,9 @@
 </script>
 
 <h2 class="h2 mb-10">Tickets</h2>
+
+{#if $Tickets.fetching}
+	<p>Tickets being fetched.</p>
+{/if}
 
 <Table source={tableSimple} interactive={true} on:selected={mySelectionHandler} />

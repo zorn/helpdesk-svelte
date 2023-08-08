@@ -1,3 +1,14 @@
+# TODO
+
+* Figure out why something is pounding the graph api with the introspection request over and over.
+* Form to create a new ticket
+* form validations
+* add more field types to demo input variety
+* edit / delete tickets
+* graph subscriptions
+* add representitives crud and their views.
+* Figure out tabs / spaces in formatter.
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
