@@ -1,4 +1,6 @@
 <script>
+	// @ts-nocheck
+
 	import { Table, tableMapperValues } from '@skeletonlabs/skeleton';
 
 	/* @type { import('./$houdini').PageData } */
@@ -6,22 +8,23 @@
 
 	$: ({ Tickets } = data);
 	$: console.log($Tickets);
-
-	$: sourceData = $Tickets.fetching ? [] : $Tickets.data.listTickets;
-
-	// $: sourceData = [
-	// 	{ id: 1, status: 'Open', subject: 'Test 1' },
-	// 	{ id: 2, status: 'Open', subject: 'Test 2' },
-	// 	{ id: 3, status: 'Open', subject: 'Test 3' }
-	// ];
+	$: sourceData = $Tickets.data.listTickets.edges.map((edge) => ({
+		id: edge.node.id,
+		status: edge.node.status,
+		subject: edge.node.subject,
+		representative: edge.node.representative ? edge.node.representative.name : ''
+	}));
 
 	$: tableSimple = {
 		// A list of heading labels.
-		head: ['ID', 'Status', 'Subject'],
+		head: ['ID', 'Status', 'Subject', 'Representative'],
 		// The data visibly shown in your table body UI.
-		body: tableMapperValues(sourceData, ['id', 'status', 'subject'])
+		body: tableMapperValues(sourceData, ['id', 'status', 'subject', 'representative'])
 	};
 
+	/**
+	 * @param {{ detail: any; }} event
+	 */
 	function mySelectionHandler(event) {
 		console.log(event.detail);
 	}
@@ -29,8 +32,22 @@
 
 <h2 class="h2 mb-10">Tickets</h2>
 
-{#if $Tickets.fetching}
-	<p>Tickets being fetched.</p>
-{/if}
-
 <Table source={tableSimple} interactive={true} on:selected={mySelectionHandler} />
+
+<button
+	type="button"
+	class="btn variant-filled"
+	on:click={Tickets.loadPreviousPage()}
+	disabled={!$Tickets.pageInfo.hasPreviousPage}
+>
+	Previous Page
+</button>
+
+<button
+	type="button"
+	class="btn variant-filled"
+	on:click={Tickets.loadNextPage()}
+	disabled={!$Tickets.pageInfo.hasNextPage}
+>
+	Next Page
+</button>

@@ -1,8 +1,21 @@
 query Tickets {
-  listTickets {
-    id
-    subject
-    status
-    representativeId
+  listTickets(first: 10) @paginate(mode: SinglePage) {
+    edges {
+      node {
+        id
+        status
+        subject
+        representative {
+          id
+          name
+        }
+      }
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
   }
 }
