@@ -8,6 +8,7 @@
 * graph subscriptions
 * add representitives crud and their views.
 * Figure out tabs / spaces in formatter.
+* For a ticket creation form, figure out how we can get the form validation rules to pick up requirements from graphql and then also handle validation errors returns in a graph response.
 
 # create-svelte
 
