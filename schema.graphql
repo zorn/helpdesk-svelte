@@ -3,6 +3,19 @@ schema {
   mutation: RootMutationType
 }
 
+input CreateRepresentativeInput {
+  name: String
+}
+
+"""The result of the :create_representative mutation"""
+type CreateRepresentativeResult {
+  """Any errors generated, if the mutation failed"""
+  errors: [MutationError]
+
+  """The successful result of the mutation"""
+  result: Representative
+}
+
 input CreateTicketInput {
   representativeId: ID
   status: TicketStatus
@@ -16,6 +29,15 @@ type CreateTicketResult {
 
   """The successful result of the mutation"""
   result: Ticket
+}
+
+"""The result of the :destroy_representative mutation"""
+type DestroyRepresentativeResult {
+  """Any errors generated, if the mutation failed"""
+  errors: [MutationError]
+
+  """The record that was successfully deleted"""
+  result: Representative
 }
 
 """The result of the :destroy_ticket mutation"""
@@ -52,24 +74,197 @@ type MutationError {
   vars: Json
 }
 
-type RootMutationType {
-  createTicket(input: CreateTicketInput): CreateTicketResult
-  destroyTicket(id: ID): DestroyTicketResult
-  updateTicket(id: ID, input: UpdateTicketInput): UpdateTicketResult
+"""A relay node"""
+interface Node {
+  """A unique identifier"""
+  id: ID!
 }
 
-type RootQueryType {
-  getTicket(
-    """The id of the record"""
-    id: ID!
-  ): Ticket
-  listTickets(
+"""A relay page info"""
+type PageInfo {
+  """When paginating forwards, the cursor to continue"""
+  endCursor: String
+
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue"""
+  startCursor: String
+}
+
+type Representative {
+  closedTickets: Int!
+  id: ID!
+  name: String
+  openTickets: Int!
+  percentOpen: Float
+  tickets(
+    """Show records after the specified keyset."""
+    after: String
+
+    """Show records before the specified keyset."""
+    before: String
+
     """A filter to limit the results"""
     filter: TicketFilterInput
+
+    """The number of records to return from the beginning. Maximum 250"""
+    first: Int
+
+    """The number of records to return to the end. Maximum 250"""
+    last: Int
+
+    """The number of records to return."""
+    limit: Int
+
+    """The number of records to skip."""
+    offset: Int
 
     """How to sort the records in the response"""
     sort: [TicketSortInput]
   ): [Ticket!]!
+  totalTickets: Int!
+}
+
+input RepresentativeFilterClosedTickets {
+  eq: Int
+  greaterThan: Int
+  greaterThanOrEqual: Int
+  in: [Int]
+  isNil: Boolean
+  lessThan: Int
+  lessThanOrEqual: Int
+  notEq: Int
+}
+
+input RepresentativeFilterId {
+  eq: ID
+  greaterThan: ID
+  greaterThanOrEqual: ID
+  in: [ID!]
+  isNil: Boolean
+  lessThan: ID
+  lessThanOrEqual: ID
+  notEq: ID
+}
+
+input RepresentativeFilterInput {
+  and: [RepresentativeFilterInput!]
+  closedTickets: RepresentativeFilterClosedTickets
+  id: RepresentativeFilterId
+  name: RepresentativeFilterName
+  openTickets: RepresentativeFilterOpenTickets
+  or: [RepresentativeFilterInput!]
+  percentOpen: RepresentativeFilterPercentOpen
+  tickets: TicketFilterInput
+  totalTickets: RepresentativeFilterTotalTickets
+}
+
+input RepresentativeFilterName {
+  eq: String
+  greaterThan: String
+  greaterThanOrEqual: String
+  in: [String]
+  isNil: Boolean
+  lessThan: String
+  lessThanOrEqual: String
+  notEq: String
+}
+
+input RepresentativeFilterOpenTickets {
+  eq: Int
+  greaterThan: Int
+  greaterThanOrEqual: Int
+  in: [Int]
+  isNil: Boolean
+  lessThan: Int
+  lessThanOrEqual: Int
+  notEq: Int
+}
+
+input RepresentativeFilterPercentOpen {
+  eq: Float
+  greaterThan: Float
+  greaterThanOrEqual: Float
+  in: [Float!]
+  isNil: Boolean
+  lessThan: Float
+  lessThanOrEqual: Float
+  notEq: Float
+}
+
+input RepresentativeFilterTotalTickets {
+  eq: Int
+  greaterThan: Int
+  greaterThanOrEqual: Int
+  in: [Int]
+  isNil: Boolean
+  lessThan: Int
+  lessThanOrEqual: Int
+  notEq: Int
+}
+
+enum RepresentativeSortField {
+  CLOSED_TICKETS
+  ID
+  NAME
+  OPEN_TICKETS
+  PERCENT_OPEN
+  TOTAL_TICKETS
+}
+
+input RepresentativeSortInput {
+  field: RepresentativeSortField!
+  order: SortOrder = ASC
+}
+
+type RootMutationType {
+  createRepresentative(input: CreateRepresentativeInput): CreateRepresentativeResult
+  createTicket(input: CreateTicketInput): CreateTicketResult
+  destroyRepresentative(id: ID): DestroyRepresentativeResult
+  destroyTicket(id: ID): DestroyTicketResult
+  updateRepresentative(id: ID, input: UpdateRepresentativeInput): UpdateRepresentativeResult
+  updateTicket(id: ID, input: UpdateTicketInput): UpdateTicketResult
+}
+
+type RootQueryType {
+  getRepresentative(
+    """The id of the record"""
+    id: ID!
+  ): Representative
+  getTicket(
+    """The id of the record"""
+    id: ID!
+  ): Ticket
+  listRepresentatives(
+    """A filter to limit the results"""
+    filter: RepresentativeFilterInput
+
+    """How to sort the records in the response"""
+    sort: [RepresentativeSortInput]
+  ): [Representative!]!
+  listTickets(
+    """Show records after the specified keyset."""
+    after: String
+
+    """Show records before the specified keyset."""
+    before: String
+
+    """A filter to limit the results"""
+    filter: TicketFilterInput
+
+    """The number of records to return from the beginning. Maximum 250"""
+    first: Int
+
+    """The number of records to return to the end. Maximum 250"""
+    last: Int
+
+    """How to sort the records in the response"""
+    sort: [TicketSortInput]
+  ): TicketConnection
 }
 
 enum SortOrder {
@@ -77,11 +272,33 @@ enum SortOrder {
   DESC
 }
 
-type Ticket {
+type Ticket implements Node {
   id: ID!
+  representative: Representative
   representativeId: ID
   status: TicketStatus!
   subject: String!
+}
+
+""":ticket connection"""
+type TicketConnection {
+  """Total count on all pages"""
+  count: Int
+
+  """:ticket edges"""
+  edges: [TicketEdge]
+
+  """Page information"""
+  pageInfo: PageInfo!
+}
+
+""":ticket edge"""
+type TicketEdge {
+  """Cursor"""
+  cursor: String!
+
+  """:ticket node"""
+  node: Ticket
 }
 
 input TicketFilterId {
@@ -99,6 +316,7 @@ input TicketFilterInput {
   and: [TicketFilterInput!]
   id: TicketFilterId
   or: [TicketFilterInput!]
+  representative: RepresentativeFilterInput
   representativeId: TicketFilterRepresentativeId
   status: TicketFilterStatus
   subject: TicketFilterSubject
@@ -152,6 +370,19 @@ input TicketSortInput {
 enum TicketStatus {
   CLOSED
   OPEN
+}
+
+input UpdateRepresentativeInput {
+  name: String
+}
+
+"""The result of the :update_representative mutation"""
+type UpdateRepresentativeResult {
+  """Any errors generated, if the mutation failed"""
+  errors: [MutationError]
+
+  """The successful result of the mutation"""
+  result: Representative
 }
 
 input UpdateTicketInput {
