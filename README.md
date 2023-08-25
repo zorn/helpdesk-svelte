@@ -6,7 +6,7 @@
 * add more field types to demo input variety
 * edit / delete tickets
 * graph subscriptions
-* add representitives crud and their views.
+* add representatives crud and their views.
 * Figure out tabs / spaces in formatter.
 * For a ticket creation form, figure out how we can get the form validation rules to pick up requirements from graphql and then also handle validation errors returns in a graph response.
 * figure out if I can suppress the "Your Node interface is not properly defined, please fix your schema to be able to use this interface." warning since I have added manual type `resolve.queryField` values to the config per type.
