@@ -8,6 +8,18 @@ const config = {
     },
     "plugins": {
         "houdini-svelte": {}
+    },
+    "types": {
+        "Ticket": {
+            "resolve": {
+                "queryField": "getTicket"
+            }
+        },
+        "Representative": {
+            "resolve": {
+                "queryField": "getRepresentative"
+            }
+        }
     }
 }
 
