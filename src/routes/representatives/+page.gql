@@ -1,0 +1,16 @@
+query Representatives {
+  listRepresentatives(first: 10) @paginate(mode: SinglePage) {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}
