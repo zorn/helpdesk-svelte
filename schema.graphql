@@ -95,7 +95,7 @@ type PageInfo {
   startCursor: String
 }
 
-type Representative {
+type Representative implements Node {
   closedTickets: Int!
   id: ID!
   name: String
@@ -127,6 +127,27 @@ type Representative {
     sort: [TicketSortInput]
   ): [Ticket!]!
   totalTickets: Int!
+}
+
+""":representative connection"""
+type RepresentativeConnection {
+  """Total count on all pages"""
+  count: Int
+
+  """:representative edges"""
+  edges: [RepresentativeEdge]
+
+  """Page information"""
+  pageInfo: PageInfo!
+}
+
+""":representative edge"""
+type RepresentativeEdge {
+  """Cursor"""
+  cursor: String!
+
+  """:representative node"""
+  node: Representative
 }
 
 input RepresentativeFilterClosedTickets {
@@ -240,12 +261,24 @@ type RootQueryType {
     id: ID!
   ): Ticket
   listRepresentatives(
+    """Show records after the specified keyset."""
+    after: String
+
+    """Show records before the specified keyset."""
+    before: String
+
     """A filter to limit the results"""
     filter: RepresentativeFilterInput
 
+    """The number of records to return from the beginning. Maximum 250"""
+    first: Int
+
+    """The number of records to return to the end. Maximum 250"""
+    last: Int
+
     """How to sort the records in the response"""
     sort: [RepresentativeSortInput]
-  ): [Representative!]!
+  ): RepresentativeConnection
   listTickets(
     """Show records after the specified keyset."""
     after: String
