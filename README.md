@@ -1,6 +1,7 @@
 # TODO
 
 * Figure out why something is pounding the graph api with the introspection request over and over.
+  * A: it was the internal setting
 * Form to create a new ticket
 * form validations
 * add more field types to demo input variety
@@ -9,6 +10,8 @@
 * add representatives crud and their views.
 * Figure out tabs / spaces in formatter.
 * For a ticket creation form, figure out how we can get the form validation rules to pick up requirements from graphql and then also handle validation errors returns in a graph response.
+* figure out why a type for representative is not being created in artifacts
+  * There is only a type generated once it is referenced in the code.
 * figure out if I can suppress the "Your Node interface is not properly defined, please fix your schema to be able to use this interface." warning since I have added manual type `resolve.queryField` values to the config per type.
 
 # create-svelte
