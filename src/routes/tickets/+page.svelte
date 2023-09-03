@@ -32,6 +32,8 @@
 
 <h2 class="h2 mb-10">Tickets</h2>
 
+<a href="/tickets/new" class="btn variant-filled"> New Ticket </a>
+
 <Table source={tableSimple} interactive={true} on:selected={mySelectionHandler} />
 
 <button
