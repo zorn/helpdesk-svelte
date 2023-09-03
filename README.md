@@ -13,6 +13,7 @@
 * figure out why a type for representative is not being created in artifacts
   * There is only a type generated once it is referenced in the code.
 * figure out if I can suppress the "Your Node interface is not properly defined, please fix your schema to be able to use this interface." warning since I have added manual type `resolve.queryField` values to the config per type.
+* When I first start the app the Ticket page does not load and is blank.
 
 # create-svelte
 
