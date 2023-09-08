@@ -31,6 +31,14 @@ type CreateTicketResult {
   result: Ticket
 }
 
+"""
+The `DateTime` scalar type represents a date and time in the UTC
+timezone. The DateTime appears in a JSON response as an ISO8601 formatted
+string, including UTC timezone ("Z"). The parsed date and time string will
+be converted to UTC if there is an offset.
+"""
+scalar DateTime
+
 """The result of the :destroy_representative mutation"""
 type DestroyRepresentativeResult {
   """Any errors generated, if the mutation failed"""
@@ -98,6 +106,7 @@ type PageInfo {
 type Representative implements Node {
   closedTickets: Int!
   id: ID!
+  insertedAt: DateTime!
   name: String
   openTickets: Int!
   percentOpen: Float
@@ -127,6 +136,7 @@ type Representative implements Node {
     sort: [TicketSortInput]
   ): [Ticket!]!
   totalTickets: Int!
+  updatedAt: DateTime!
 }
 
 """:representative connection"""
@@ -176,12 +186,25 @@ input RepresentativeFilterInput {
   and: [RepresentativeFilterInput!]
   closedTickets: RepresentativeFilterClosedTickets
   id: RepresentativeFilterId
+  insertedAt: RepresentativeFilterInsertedAt
   name: RepresentativeFilterName
   openTickets: RepresentativeFilterOpenTickets
   or: [RepresentativeFilterInput!]
   percentOpen: RepresentativeFilterPercentOpen
   tickets: TicketFilterInput
   totalTickets: RepresentativeFilterTotalTickets
+  updatedAt: RepresentativeFilterUpdatedAt
+}
+
+input RepresentativeFilterInsertedAt {
+  eq: DateTime
+  greaterThan: DateTime
+  greaterThanOrEqual: DateTime
+  in: [DateTime!]
+  isNil: Boolean
+  lessThan: DateTime
+  lessThanOrEqual: DateTime
+  notEq: DateTime
 }
 
 input RepresentativeFilterName {
@@ -228,13 +251,26 @@ input RepresentativeFilterTotalTickets {
   notEq: Int
 }
 
+input RepresentativeFilterUpdatedAt {
+  eq: DateTime
+  greaterThan: DateTime
+  greaterThanOrEqual: DateTime
+  in: [DateTime!]
+  isNil: Boolean
+  lessThan: DateTime
+  lessThanOrEqual: DateTime
+  notEq: DateTime
+}
+
 enum RepresentativeSortField {
   CLOSED_TICKETS
   ID
+  INSERTED_AT
   NAME
   OPEN_TICKETS
   PERCENT_OPEN
   TOTAL_TICKETS
+  UPDATED_AT
 }
 
 input RepresentativeSortInput {
@@ -307,10 +343,12 @@ enum SortOrder {
 
 type Ticket implements Node {
   id: ID!
+  insertedAt: DateTime!
   representative: Representative
   representativeId: ID
   status: TicketStatus!
   subject: String!
+  updatedAt: DateTime!
 }
 
 """:ticket connection"""
@@ -348,11 +386,24 @@ input TicketFilterId {
 input TicketFilterInput {
   and: [TicketFilterInput!]
   id: TicketFilterId
+  insertedAt: TicketFilterInsertedAt
   or: [TicketFilterInput!]
   representative: RepresentativeFilterInput
   representativeId: TicketFilterRepresentativeId
   status: TicketFilterStatus
   subject: TicketFilterSubject
+  updatedAt: TicketFilterUpdatedAt
+}
+
+input TicketFilterInsertedAt {
+  eq: DateTime
+  greaterThan: DateTime
+  greaterThanOrEqual: DateTime
+  in: [DateTime!]
+  isNil: Boolean
+  lessThan: DateTime
+  lessThanOrEqual: DateTime
+  notEq: DateTime
 }
 
 input TicketFilterRepresentativeId {
@@ -388,11 +439,24 @@ input TicketFilterSubject {
   notEq: String
 }
 
+input TicketFilterUpdatedAt {
+  eq: DateTime
+  greaterThan: DateTime
+  greaterThanOrEqual: DateTime
+  in: [DateTime!]
+  isNil: Boolean
+  lessThan: DateTime
+  lessThanOrEqual: DateTime
+  notEq: DateTime
+}
+
 enum TicketSortField {
   ID
+  INSERTED_AT
   REPRESENTATIVE_ID
   STATUS
   SUBJECT
+  UPDATED_AT
 }
 
 input TicketSortInput {

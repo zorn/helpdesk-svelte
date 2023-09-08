@@ -9,6 +9,20 @@ const config = {
     "plugins": {
         "houdini-svelte": {}
     },
+    "scalars": {
+        "Json": {
+            "type": "Record<any, any>",
+        },
+        "DateTime": {
+            "type": "Date",
+            unmarshal(val) {
+                return val ? new Date(val) : null
+            },
+            marshal(val) {
+                return date && date.getTime()
+            }
+        }
+    },
     "types": {
         "Ticket": {
             "resolve": {
