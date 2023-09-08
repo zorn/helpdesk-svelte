@@ -8,10 +8,13 @@
 
 	$: ({ Representatives } = data);
 	$: console.log($Representatives);
-	$: sourceData = $Representatives.data.listRepresentatives.edges.map((edge) => ({
-		id: edge.node.id,
-		name: edge.node.name
-	}));
+	$: sourceData =
+		$Representatives.data == null
+			? []
+			: $Representatives.data.listRepresentatives.edges.map((edge) => ({
+					id: edge.node.id,
+					name: edge.node.name
+			  }));
 
 	$: tableSimple = {
 		// A list of heading labels.
