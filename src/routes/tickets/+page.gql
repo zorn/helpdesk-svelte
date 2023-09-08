@@ -1,10 +1,11 @@
 query Tickets {
-  listTickets(first: 10) @paginate(mode: SinglePage) {
+  listTickets(first: 10, sort: {field: INSERTED_AT, order: DESC}) @paginate(mode: SinglePage) {
     edges {
       node {
         id
         status
         subject
+        insertedAt
         representative {
           id
           name

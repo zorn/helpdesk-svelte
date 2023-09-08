@@ -8,18 +8,22 @@
 
 	$: ({ Tickets } = data);
 	$: console.log($Tickets);
-	$: sourceData = $Tickets.data.listTickets.edges.map((edge) => ({
-		id: edge.node.id,
-		status: edge.node.status,
-		subject: edge.node.subject,
-		representative: edge.node.representative ? edge.node.representative.name : ''
-	}));
+	$: sourceData =
+		$Tickets.data == null
+			? []
+			: $Tickets.data.listTickets.edges.map((edge) => ({
+					id: edge.node.id,
+					insertedAt: edge.node.insertedAt,
+					status: edge.node.status,
+					subject: edge.node.subject,
+					representative: edge.node.representative ? edge.node.representative.name : ''
+			  }));
 
 	$: tableSimple = {
 		// A list of heading labels.
-		head: ['ID', 'Status', 'Subject', 'Representative'],
+		head: ['ID', 'Created At', 'Status', 'Subject', 'Representative'],
 		// The data visibly shown in your table body UI.
-		body: tableMapperValues(sourceData, ['id', 'status', 'subject', 'representative'])
+		body: tableMapperValues(sourceData, ['id', 'insertedAt', 'status', 'subject', 'representative'])
 	};
 
 	/**
